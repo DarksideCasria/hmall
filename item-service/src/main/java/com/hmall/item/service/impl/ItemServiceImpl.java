@@ -11,6 +11,7 @@ import com.hmall.item.domain.po.Item;
 import com.hmall.item.mapper.ItemMapper;
 import com.hmall.item.service.IItemService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements IItemService {
 
     @Override
+    @Transactional
     public void deductStock(List<OrderDetailDTO> items) {
         String sqlStatement = "com.hmall.item.mapper.ItemMapper.updateStock";
         boolean r = false;
@@ -43,4 +45,22 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
     public List<ItemDTO> queryItemByIds(Collection<Long> ids) {
         return BeanUtils.copyList(listByIds(ids), ItemDTO.class);
     }
+
+    @Override
+    @Transactional
+    public void restoreStock(List<OrderDetailDTO> items) {
+        if (items == null || items.isEmpty()) {
+            return;
+        }
+        // 遍历每一个商品，恢复库存
+        for (OrderDetailDTO item : items) {
+            // update tb_item set stock = stock + ? where id = ?
+            // 使用 setSql("stock = stock + " + num) 让数据库去计算，保证原子性
+            lambdaUpdate()
+                    .setSql("stock = stock + " + item.getNum())
+                    .eq(Item::getId, item.getItemId())
+                    .update();
+        }
+    }
+
 }

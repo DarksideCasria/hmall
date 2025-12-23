@@ -60,3 +60,5 @@ hm:
     package: com.hmall.cart.controller
   cart:
     maxItems: 50  # 设置购物车最大商品数量，可以根据实际需求调整
+seata:
+  enable-auto-data-source-proxy: false   # 关键一行！关闭自动代理

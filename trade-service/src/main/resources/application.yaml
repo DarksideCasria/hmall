@@ -14,6 +14,12 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.43.198:8848
+  rabbitmq:
+    host: 192.168.43.198
+    port: 5672
+    virtual-host: /hmall
+    username: hmall
+    password: 123
 mybatis-plus:
   configuration:
     default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
@@ -43,3 +49,5 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.hmall.trade.controller
+seata:
+  enable-auto-data-source-proxy: false   # 关键一行！关闭自动代理

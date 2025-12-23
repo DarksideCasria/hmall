@@ -18,8 +18,22 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 1.获取请求头中的 token
         String token = request.getHeader("authorization");
-        // 2.校验token
-        Long userId = jwtTool.parseToken(token);
+        Long userId;
+        if (token != null && !token.isBlank()) {
+            // 2.校验token
+            userId = jwtTool.parseToken(token);
+        } else {
+            // 尝试读取内部调用携带的 userInfo 头
+            String userInfoHeader = request.getHeader("userInfo");
+            if (userInfoHeader == null || userInfoHeader.isBlank()) {
+                throw new com.hmall.common.exception.UnauthorizedException("未登录");
+            }
+            try {
+                userId = Long.valueOf(userInfoHeader);
+            } catch (NumberFormatException e) {
+                throw new com.hmall.common.exception.UnauthorizedException("无效的用户信息", e);
+            }
+        }
         // 3.存入上下文
         UserContext.setUser(userId);
         // 4.放行

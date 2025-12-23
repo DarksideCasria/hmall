@@ -48,3 +48,5 @@ knife4j:
 feign:
   okhttp:
     enabled: true
+seata:
+  enable-auto-data-source-proxy: false   # 关键一行！关闭自动代理

@@ -30,9 +30,9 @@ public class UserController {
 //            @ApiImplicitParam(name = "pw", value = "支付密码"),
 //            @ApiImplicitParam(name = "amount", value = "支付金额")
 //    })
-//    @PutMapping("/money/deduct")
-//    public void deductMoney(@RequestParam("pw") String pw,@RequestParam("amount") Integer amount){
-//        userService.deductMoney(pw, amount);
-//    }
+    @PutMapping("/money/deduct")
+    public void deductMoney(@RequestParam("pw") String pw,@RequestParam("amount") Integer amount){
+        userService.deductMoney(pw, amount);
+    }
 }
 
